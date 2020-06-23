@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../../node_modules/vue/dist/vue.js"></script>
+    <script src="../../node_modules/sass.js/dist/sass.js"></script>
+    <script src="../../src/httpVueLoader.js"></script>
+    <script>
+        httpVueLoader.langProcessor.scss = function (scssText) {
+            console.log("httpVueLoader.langProcessor.scss -> scssText", scssText)
+            return new Promise(function (resolve, reject) {
+                const sass = new Sass();
+                sass.compile(scssText, function (result) {
+                    console.log("httpVueLoader.langProcessor.scss -> result", result)
+                    if (result.status === 0) {
+                        resolve(result.text)
+                    } else {
+                        reject(result)
+
+                    }
+                });
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <div id="my-app">
+        <my-component></my-component>
+    </div>
+
+    <script type="text/javascript">
+        new Vue({
+            el: '#my-app',
+            components: {
+                'my-component': httpVueLoader('my-component.vue')
+            }
+        });
+    </script>
+</body>
+
+</html>
